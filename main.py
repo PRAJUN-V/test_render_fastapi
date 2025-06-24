@@ -23,6 +23,6 @@ async def read_root():
 
 @app.get("/users/")
 async def get_users(db: AsyncSession = Depends(get_db)):
-    result = await db.execute(select(User))
-    users = result.scalars().all()
-    return users
+    async with db.begin():
+        result = await db.execute(select(User))
+        return result.scalars().all()
